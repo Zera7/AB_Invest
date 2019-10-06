@@ -1,0 +1,53 @@
+﻿@{
+    ViewData["Title"] = "MyShares";
+    var accountType = (AccountType)ViewBag.AccountType;
+    var shares = (IEnumerable<object>)ViewBag.Shares;
+}
+
+<h2>@WebClassHelper.GetSharesOwnerTitle(accountType)</h2>
+@if (shares != null && shares.Count() > 0)
+{
+    <table class="table" style="font-size: 1.5em;">
+        @switch (accountType)
+        {
+            case AccountType.user:
+                var shareBalancesCast = (IEnumerable<ShareBalance>)shares;
+                @foreach (var shareBalance in shareBalancesCast)
+                {
+                    <tr>
+                        <td><a class="btn btn-default" style="min-width: 100px;">@shareBalance.Share.Company.Name</a></td>
+                        <td><a class="btn btn-default" style="min-width: 100px;">@shareBalance.Share.Name</a></td>
+                        <td>@(shareBalance.Share.Cost + 10)</td>
+                        <td>@(shareBalance.Share.Cost - 10)</td>
+                        <td>@shareBalance.Share.Currency.Name</td>
+                        <td><a class="btn btn-primary">Торговать</a></td>
+                    </tr>
+                }
+                break;
+            case AccountType.company:
+                var sharesCast = (IEnumerable<Share>)shares;
+                @foreach (var share in sharesCast)
+                {
+                    <tr>
+                        <td><a class="btn btn-default" style="min-width: 100px;">@share.Name</a></td>
+                        <td><span class="@share.GetStatusStyle()">@share.Status.ToString()</span></td>
+                        @if (share.Status == ShareModerateStatus.WaitingVerification)
+                        {
+                            <td class="right"><a asp-controller="Shares" asp-action="RequestShareVerification" asp-route-shareId="@share.Id" class="btn btn-default">Отправить на проверку</a></td>
+                        }
+                        else if (share.Status == ShareModerateStatus.Accepted)
+                        {
+                            <td class="right"><a asp-controller="Shares" asp-action="IssueShares" asp-route-shareId="@share.Id" class="btn btn-primary">Выпустить акции</a></td>
+                        }
+                    </tr>
+                }
+                break;
+            default:
+                throw new Exception("Неопределенный тип аккаунта");
+        }
+    </table>
+}
+else
+{
+    <p style="font-size: 1.5em;">У вас еще нет акций</p>
+}

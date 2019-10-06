@@ -1,0 +1,30 @@
+﻿@model Share
+@{
+    ViewData["Title"] = "ModerateShare";
+}
+
+<h2>ModedrateShare</h2>
+
+<div class="row">
+    <div class="col-md-6 center-block">
+        <form asp-action="ModerateShare">
+            <input asp-for="@Model.Id" type="hidden" />
+            <table class="table">
+                <tr><td>Компания</td><td>@Model.Company.Name</td></tr>
+                <tr><td>Название акций</td><td>@Model.Name</td></tr>
+                <tr><td>Стоимость акции</td><td>@Model.Cost</td></tr>
+                <tr><td>Валюта</td><td>@Model.Currency.Name</td></tr>
+                <tr><td>Дивиденды</td><td>@Model.Dividends</td></tr>
+            </table>
+            <hr>
+            <div asp-validation-summary="ModelOnly" class="text-danger"></div>
+            <div class="form-group">
+                <label asp-for="@Model.MarkupPercent" class="control-label"></label>
+                <input asp-for="@Model.MarkupPercent" class="form-control" />
+                <span asp-validation-for="@Model.MarkupPercent" class="text-danger"></span>
+            </div>
+            <input type="submit" value="Подтвердить" class="btn btn-primary" />
+            <a asp-action="RejectShare" asp-route-shareId="@Model.Id" class="btn btn-default">Отклонить</a>
+        </form>
+    </div>
+</div>

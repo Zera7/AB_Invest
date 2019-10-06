@@ -1,0 +1,53 @@
+﻿@{
+    ViewData["Title"] = "Index";
+    var accountType = (AccountType)ViewBag.AccountType;
+    var minimalAccountData = (MinimalAccountData)ViewBag.MinimalAccountData;
+}
+
+<h2>Profile</h2>
+
+<div class="mrg-bottom">
+    @if (minimalAccountData.HasSelectedType(AccountType.user))
+    {
+        <a asp-action="Index" asp-route-type="user" class="btn @WebClassHelper.GetButtonStyle(accountType, AccountType.user)">Пользователь</a>
+    }
+    @if (minimalAccountData.HasSelectedType(AccountType.company))
+    {
+        <a asp-action="Index" asp-route-type="company" class="btn  @WebClassHelper.GetButtonStyle(accountType, AccountType.company)">Компания</a>
+    }
+</div>
+
+<div class="row">
+    <div class="col-md-4 border">
+        <h2>Данные аккаунта</h2>
+        <table class="table">
+            @if (accountType == AccountType.user)
+            {
+                var accountData = (UserData)ViewBag.AccountData;
+                <tr><td>Имя</td><td>@accountData.FirstName</td></tr>
+                <tr><td>Фамилия</td><td>@accountData.LastName</td></tr>
+                <tr><td>Отчество</td><td>@accountData.MiddleName</td></tr>
+            }
+            else if (accountType == AccountType.company)
+            {
+                var accountData = (CompanyData)ViewBag.AccountData;
+                <tr><td>Company name</td><td>@accountData.Name</td></tr>
+            }
+        </table>
+        @if (accountType == AccountType.company)
+        {
+            <a asp-controller="Shares" asp-action="AddShare" class="btn btn-default mrg-bottom">Создать акцию</a>
+        }
+    </div>
+    <div class="col-md-8">
+        <div class="pdn border mrg-bottom">
+            @{await Html.RenderPartialAsync("_MyShares");}
+        </div>
+        <div class="pdn border">
+            @{await Html.RenderPartialAsync("_MyWallet");}
+        </div>
+    </div>
+</div>
+
+
+

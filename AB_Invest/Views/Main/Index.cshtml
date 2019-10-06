@@ -1,0 +1,13 @@
+﻿@{
+    ViewData["Title"] = "AB_Invest";
+}
+<div class="home_wrapper pdn">
+    <div class="home_welcome pdn mrg-top">
+        <h1>AB_Invest</h1>
+        <p>Место, где вы можете торговать акциями максимально выгодно</p>
+
+        @if (string.IsNullOrEmpty(User.Identity.Name)) {
+            <a asp-controller="Account" class="btn btn-primary">Войти</a>
+        }
+    </div>
+</div>

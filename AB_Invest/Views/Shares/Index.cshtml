@@ -1,0 +1,35 @@
+﻿@model IEnumerable<Share>
+@{
+    ViewData["Title"] = "Shares";
+}
+
+<h2>Акции</h2>
+
+<div class="row">
+    <h2>Акции</h2>
+    <div class="mrg-bottom">
+        <a asp-route-orderBy="@ViewBag.OrderBy" class="@WebClassHelper.GetBtnStyleByCompare("",ViewBag.SortOrder) glyphicon glyphicon-sort-by-order-alt"></a>
+        <a asp-route-sortOrder="descending" asp-route-orderBy="@ViewBag.OrderBy" class="@WebClassHelper.GetBtnStyleByCompare("descending",ViewBag.SortOrder) glyphicon glyphicon-sort-by-order"></a>
+    </div>
+    <div>
+        <table data-="" class="table">
+            <tr>
+                <td><a class="@WebClassHelper.GetBtnStyleByCompare("company",ViewBag.OrderBy)" asp-route-orderBy="company" asp-route-sortOrder="@ViewBag.SortOrder">Компания</a></td>
+                <td><a class="@WebClassHelper.GetBtnStyleByCompare("name",ViewBag.OrderBy)" asp-route-orderBy="name" asp-route-sortOrder="@ViewBag.SortOrder">Акция</a></td>
+                <td><a class="@WebClassHelper.GetBtnStyleByCompare("finalCost",ViewBag.OrderBy)" asp-route-orderBy="finalCost" asp-route-sortOrder="@ViewBag.SortOrder">Стоимость</a></td>
+                <td><a class="@WebClassHelper.GetBtnStyleByCompare("dividends",ViewBag.OrderBy)" asp-route-orderBy="dividends" asp-route-sortOrder="@ViewBag.SortOrder">Выплата</a></td>
+                <td><a class="@WebClassHelper.GetBtnStyleByCompare("nextPayDay",ViewBag.OrderBy)" asp-route-orderBy="nextPayDay" asp-route-sortOrder="@ViewBag.SortOrder">Дата следующей выплаты</a></td>
+            </tr>
+            @foreach (var share in Model)
+            {
+                <tr>
+                    <td><a class="btn btn-default" asp-controller="Trading" asp-route-shareId="@share.Id">@share.Company.Name</a></td>
+                    <td>@share.Name</td>
+                    <td>@share.GetFinalCost()</td>
+                    <td>@share.Dividends</td>
+                    <td>@share.NextPayDay</td>
+                </tr>
+            }
+        </table>
+    </div>
+</div>

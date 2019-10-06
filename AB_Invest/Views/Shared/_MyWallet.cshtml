@@ -1,0 +1,25 @@
+﻿
+@{
+    ViewData["Title"] = "MyWallet";
+    var accountType = (AccountType)ViewBag.AccountType;
+    var currencyBalances = (IEnumerable<CurrencyBalance>)ViewBag.CurrencyBalances;
+}
+
+<h2>Ваш кошелек</h2>
+@if (currencyBalances != null && currencyBalances.Count() > 0)
+{
+    <table class="table" style="font-size: 1.5em;">
+       @foreach (var balance in currencyBalances)
+       {
+           <tr>
+                <td>@balance.Amount</td>
+                <td>@balance.Currency.Name</td>
+                <td><a class="btn btn-primary">Обменять</a></td>
+           </tr>
+       }
+    </table>
+}
+else
+{
+    <p style="font-size: 1.5em;">Денег нет, милорд</p>
+}

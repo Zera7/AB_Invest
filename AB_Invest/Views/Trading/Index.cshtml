@@ -1,0 +1,100 @@
+﻿@model ShareBalance
+@{
+    ViewData["Title"] = "TradeShare";
+    var error = ViewBag.Error as string;
+}
+
+<h2>TradeShare</h2>
+
+<div class="mrg-bottom">
+    @if (ViewBag.Account.HasSelectedType(AccountType.user))
+    {
+        <a asp-route-shareId="@ViewBag.Share.Id" class="btn @WebClassHelper.GetButtonStyle(ViewBag.Type, AccountType.user)">Пользователь</a>
+    }
+    @if (ViewBag.Account.HasSelectedType(AccountType.company))
+    {
+        <a asp-route-shareId="@ViewBag.Share.Id" class="btn @WebClassHelper.GetButtonStyle(ViewBag.Type, AccountType.company)">Компания</a>
+    }
+</div>
+
+<div class="row">
+    <div class="col-md-4">
+        <div class="border mrg-bottom pdn">
+            <h2>Информация об акциях</h2>
+            <table class="table">
+                <tr><td>Компания</td><td>@ViewBag.Share.Company.Name</td></tr>
+                <tr><td>Название акций</td><td>@ViewBag.Share.Name</td></tr>
+                <tr><td>Стоимость акции</td><td>@ViewBag.Share.FinalCost</td></tr>
+                <tr><td>Валюта</td><td>@ViewBag.Share.Currency.Name</td></tr>
+                <tr><td>Дивиденды</td><td>@ViewBag.Share.Dividends</td></tr>
+            </table>
+        </div>
+        <div class="border mrg-bottom pdn">
+            <form asp-action="Index">
+                <div asp-validation-summary="ModelOnly" class="text-danger"></div>
+
+                <input asp-for="@Model.Type" type="hidden" value="@((byte)(ViewBag.Type))" />
+                <input asp-for="@Model.ShareId" type="hidden" value="@ViewBag.Share.Id" />
+
+                <div class="form-group">
+                    <label asp-for="@Model.Amount" class="control-label"></label>
+                    <input asp-for="@Model.Amount" class="form-control" />
+                    <span asp-validation-for="@Model.Amount" class="text-danger"></span>
+                </div>
+                <input type="submit" value="Купить акции" class="btn btn-primary" />
+            </form>
+
+            @*<form asp-action="TradeShare">
+                    <div asp-validation-summary="ModelOnly" class="text-danger"></div>
+
+                    <input asp-for="@Model.Type" type="hidden" value="@{((byte)(ViewBag.Type)).ToString();}" />
+                    <input asp-for="@Model.ShareId" type="hidden" value="@ViewBag.Share.Id" />
+
+                    <div class="form-group">
+                        <label asp-for="@Model.Amount" class="control-label"></label>
+                        <input asp-for="@Model.Amount" class="form-control" />
+                        <span asp-validation-for="@Model.Amount" class="text-danger"></span>
+                    </div>
+                    <input type="submit" value="Продать акции" class="btn btn-primary" />
+                </form>*@
+        </div>
+    </div>
+    <div class="col-md-8 center-block border">
+        <div style="font-size: 1.5em;">
+            <h2>Мой баланс</h2>
+            <h3>Акции</h3>
+            @if (ViewBag.MyShare != null)
+            {
+                <table class="table">
+                    <tr>
+                        <td>@ViewBag.MyShare.Share.Name</td>
+                        <td>@ViewBag.MyShare.Amount шт.</td>
+                    </tr>
+                </table>
+            }
+            else
+            {
+                <p>У вас нет этих акций</p>
+            }
+        </div>
+
+        <hr>
+        <h3>Валюта</h3>
+        @if (ViewBag.Account.Balances != null && ViewBag.Account.Balances.Count > 0)
+        {
+            <table class="table">
+                @foreach (var item in ViewBag.Account.Balances)
+                {
+                    <tr>
+                        <td>@item.Amount</td>
+                        <td>@item.Currency.Name</td>
+                    </tr>
+                }
+            </table>
+        }
+        else
+        {
+            <p>У вас нет валюты</p>
+        }
+    </div>
+</div>
